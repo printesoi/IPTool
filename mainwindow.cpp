@@ -68,6 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QSpinBox* maskBox = new QSpinBox(this);
     maskBox->setMinimum(0);
     maskBox->setMaximum(32);
+    maskBox->setValue(8);
     connect(maskBox, SIGNAL(valueChanged(int)),
             this, SLOT(slotMaskChanged(int)));
 
@@ -109,6 +110,7 @@ MainWindow::MainWindow(QWidget *parent) :
     widget->setLayout(m_mainLayout);
     setCentralWidget(widget);
 
+    slotMaskChanged(maskBox->value());
     updateAdresses();
 }
 
