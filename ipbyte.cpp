@@ -4,7 +4,7 @@
 * Description : A simple GUI program written in Qt to calculate network
                 adress and broadcast address given the IP and the mask
 *
-* Copyright (C) 2012 Dodon Victor <victordodon at gmail dot com>
+* Copyright (C) 2012 Dodon Victor <victor dot dodon at cti dot pub dot ro>
 *
 * This program is free software; you can redistribute it
 * and/or modify it under the terms of the GNU General
