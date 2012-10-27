@@ -1,3 +1,4 @@
 IPTool
 *.o
 moc_*
+Makefile
