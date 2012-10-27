@@ -1,4 +1,4 @@
-To be able to compile this app you need Qt headers, qmake and g++.
+To be able to compile this app you need Qt headers, qmake and g++
 
 For archlinux:
     sudo pacman -S qt g++
@@ -6,4 +6,7 @@ For archlinux:
 For [.]Ubuntu:
     sudo apt-get install qt4-qmake libqt4-dev g++
 
-Just run make and enjoy!
+Just run:
+    qmake && make
+
+Enjoy!
