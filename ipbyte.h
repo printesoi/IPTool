@@ -38,7 +38,7 @@ public:
     void focus();
     uint8_t byte();
     void clear();
-    
+
 signals:
     void full(bool);
     void byteChanged(uint8_t);
@@ -47,7 +47,7 @@ private slots:
     void slotBitClicked(int value);
     void slotTextChanged(QString);
     void slotFocus(bool);
-    
+
 private:
     void updateText();
     void updateBits(uint8_t value);

@@ -34,14 +34,14 @@ public:
 protected:
     void mousePressEvent(QMouseEvent *ev);
     void toggleValue();
-    
+
 signals:
     void valueChanged(int value);
     void clicked(int value);
-    
+
 public slots:
     void slotSetValue(int value);
-    
+
 };
 
 #endif // CLICKABLEBIT_H
