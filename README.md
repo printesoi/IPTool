@@ -1,12 +1,15 @@
 To be able to compile this app you need Qt headers, qmake and g++
 
 For archlinux:
+
         sudo pacman -S qt g++
 
 For [.]Ubuntu:
+
         sudo apt-get install qt4-qmake libqt4-dev g++
 
 Just run:
+
         qmake && make
 
 ##Usage:##
@@ -15,3 +18,5 @@ Just run:
     F1        -> Display "About"
 
     You can click on the bits below the input fields to change the values.
+
+![Screenshot](http://img27.imageshack.us/img27/3944/54340737.png)
