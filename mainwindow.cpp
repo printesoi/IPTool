@@ -35,32 +35,23 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), m_mainLayout(0), m_ip(0)
 {
     m_mainLayout = new QGridLayout();
-    m_ip = new IPv4();
-
     makeMenus();
 
     QLabel* ipLabel = new QLabel(this);
     ipLabel->setText("IP address:");
-    byte0 = new IPByte(this);
-    byte1 = new IPByte(this);
-    byte2 = new IPByte(this);
-    byte3 = new IPByte(this);
-
     m_mainLayout->addWidget(ipLabel, 0, 0, 1, 1);
-    m_mainLayout->addWidget(byte0, 0, 1, 1, 1, Qt::AlignHCenter);
-    m_mainLayout->addWidget(byte1, 0, 2, 1, 1, Qt::AlignHCenter);
-    m_mainLayout->addWidget(byte2, 0, 3, 1, 1, Qt::AlignHCenter);
-    m_mainLayout->addWidget(byte3, 0, 4, 1, 1, Qt::AlignHCenter);
-    byte0->focus();
+    m_ip = new IPv4();
 
-    connect(byte0, SIGNAL(byteChanged(uint8_t)),
-            this, SLOT(slotAddressChanged()));
-    connect(byte1, SIGNAL(byteChanged(uint8_t)),
-            this, SLOT(slotAddressChanged()));
-    connect(byte2, SIGNAL(byteChanged(uint8_t)),
-            this, SLOT(slotAddressChanged()));
-    connect(byte3, SIGNAL(byteChanged(uint8_t)),
-            this, SLOT(slotAddressChanged()));
+    bytes = QVector<IPByte*>(4);
+
+    for (int i = 0; i < 4; ++i)
+    {
+        bytes[i] = new IPByte(this);
+        m_mainLayout->addWidget(bytes[i], 0, i + 1, 1, 1, Qt::AlignHCenter);
+        connect(bytes[i], SIGNAL(byteChanged(uint8_t)),
+                this, SLOT(slotAddressChanged()));
+    }
+    bytes[0]->focus();
 
     QLabel* maskLabel = new QLabel(this);
     maskLabel->setText("/");
@@ -75,12 +66,11 @@ MainWindow::MainWindow(QWidget *parent) :
     m_mainLayout->addWidget(maskLabel, 0, 5, 1, 1);
     m_mainLayout->addWidget(maskBox,   0, 6, 1, 1);
 
-    connect(byte0, SIGNAL(full(bool)),
-            byte1, SLOT(slotFocus(bool)));
-    connect(byte1, SIGNAL(full(bool)),
-            byte2, SLOT(slotFocus(bool)));
-    connect(byte2, SIGNAL(full(bool)),
-            byte3, SLOT(slotFocus(bool)));
+    for (int i = 0; i < 3; ++i)
+    {
+        connect(bytes[i],     SIGNAL(full(bool)),
+                bytes[i + 1], SLOT(slotFocus(bool)));
+    }
 
     netAddr = QVector<InputField*>(4);
     QLabel* netLabel = new QLabel(this);
@@ -109,6 +99,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QWidget *widget = new QWidget;
     widget->setLayout(m_mainLayout);
     setCentralWidget(widget);
+    layout()->setSizeConstraint(QLayout::SetFixedSize);
 
     slotMaskChanged(maskBox->value());
     updateAdresses();
@@ -128,7 +119,7 @@ void MainWindow::slotMaskChanged(int val)
 
 void MainWindow::slotAddressChanged()
 {
-    m_ip->setAddr(byte0->byte() << 24 | byte1->byte() << 16 | byte2->byte() << 8 | byte3->byte());
+    m_ip->setAddr(bytes[0]->byte() << 24 | bytes[1]->byte() << 16 | bytes[2]->byte() << 8 | bytes[3]->byte());
     updateAdresses();
 }
 
@@ -157,33 +148,26 @@ void MainWindow::makeMenus()
     connect(clearAction, SIGNAL(triggered(bool)),
             this, SLOT(slotClear()));
     connect(quitAction, SIGNAL(triggered(bool)),
-            this, SLOT(slotQuit()));
+            this, SLOT(close()));
     connect(helpAction, SIGNAL(triggered(bool)),
             this, SLOT(slotHelp()));
 }
 
 void MainWindow::slotClear()
 {
-    byte0->clear();
-    byte1->clear();
-    byte2->clear();
-    byte3->clear();
-    byte0->focus();
+    foreach (IPByte* b, bytes)
+        b->clear();
+    bytes[0]->focus();
 }
 
 void MainWindow::slotHelp()
 {
     QMessageBox box;
-    QString text = "A simple tool to calculate network addresses, \n"
-                   "and broadcast addresses for given IP.\n\n"
+    QString text = "A simple tool to calculate network address,"
+                   " and broadcast address for given IP and prefix.\n\n"
                    "(C) Victor Dodon, 2012, victor.dodon@cti.pub.ro";
     box.setInformativeText(text);
-    box.setMinimumWidth(300);
+    box.setMinimumWidth(350);
     box.exec();
-    byte0->focus();
-}
-
-void MainWindow::slotQuit()
-{
-    close();
+    bytes[0]->focus();
 }

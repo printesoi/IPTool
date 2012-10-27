@@ -40,7 +40,6 @@ public:
     void clear();
     
 signals:
-    void full(char c);
     void full(bool);
     void byteChanged(uint8_t);
 

@@ -27,14 +27,10 @@
 IPByte::IPByte(QWidget *parent) :
     QWidget(parent), m_layout(0), m_lineEdit(0), m_bits(8)
 {
-    setByte(0);
-
-    setFixedWidth(100);
-    setFixedHeight(50);
-
     m_layout = new QGridLayout(this);
     m_lineEdit = new InputField(this);
     m_lineEdit->setAlignment(Qt::AlignHCenter);
+    setByte(0);
     updateText();
 
     QWidget* widget = parent ? parent : this;
