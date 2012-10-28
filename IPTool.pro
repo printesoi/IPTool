@@ -14,7 +14,6 @@ TEMPLATE = app
 
 CONFIG += debug
 
-
 SOURCES += main.cpp\
         mainwindow.cpp\
         ipv4.cpp\
