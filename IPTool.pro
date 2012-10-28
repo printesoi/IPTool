@@ -21,7 +21,6 @@ SOURCES += main.cpp\
         ipbyte.cpp\
         inputfield.cpp
 
-
 HEADERS  += mainwindow.h\
     ipv4.h\
     clickablebit.h\
