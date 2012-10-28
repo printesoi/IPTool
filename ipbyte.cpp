@@ -95,7 +95,7 @@ void IPByte::slotTextChanged(QString text)
     uint16_t value = text.toInt(&ok);
     if (!ok)
     {
-        m_lineEdit->clear();
+        m_lineEdit->setText(text.left(text.length() - 1));
     }
     else
     {
