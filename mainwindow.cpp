@@ -32,15 +32,13 @@
 #include "ipv4.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent), m_mainLayout(0), m_ip(0)
+    QMainWindow(parent), m_mainLayout(new QGridLayout()), m_ip(new IPv4())
 {
-    m_mainLayout = new QGridLayout();
     makeMenus();
 
     QLabel* ipLabel = new QLabel(this);
     ipLabel->setText("IP address:");
     m_mainLayout->addWidget(ipLabel, 0, 0, 1, 1);
-    m_ip = new IPv4();
 
     bytes = QVector<IPByte*>(4);
 
@@ -96,7 +94,7 @@ MainWindow::MainWindow(QWidget *parent) :
         m_mainLayout->addWidget(broadcastAddr[i], 2, i + 1, 1, 1);
     }
 
-    QWidget *widget = new QWidget;
+    QWidget *widget = new QWidget(this);
     widget->setLayout(m_mainLayout);
     setCentralWidget(widget);
     layout()->setSizeConstraint(QLayout::SetFixedSize);
