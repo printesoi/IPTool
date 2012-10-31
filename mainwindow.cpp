@@ -18,6 +18,7 @@
 *
 * ============================================================ */
 
+// Qt includes
 #include <QGridLayout>
 #include <QLabel>
 #include <QDebug>
@@ -26,10 +27,13 @@
 #include <QMenu>
 #include <QAction>
 #include <QMessageBox>
+
+// Local includes
 #include "mainwindow.h"
 #include "ipbyte.h"
 #include "inputfield.h"
 #include "ipv4.h"
+#include "logarea.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), m_mainLayout(new QGridLayout()), m_ip(new IPv4())
@@ -55,8 +59,8 @@ MainWindow::MainWindow(QWidget *parent) :
     maskLabel->setText("/");
 
     QSpinBox* maskBox = new QSpinBox(this);
-    maskBox->setMinimum(0);
-    maskBox->setMaximum(32);
+    maskBox->setMinimum(1);
+    maskBox->setMaximum(31);
     maskBox->setValue(8);
     connect(maskBox, SIGNAL(valueChanged(int)),
             this, SLOT(slotMaskChanged(int)));
@@ -106,6 +110,11 @@ MainWindow::MainWindow(QWidget *parent) :
         m_mainLayout->addWidget(m_broadcastAddr[i], 3, i + 1, 1, 1);
     }
 
+    m_logArea = new LogArea(this);
+    m_logArea->setFixedHeight(100);
+
+    m_mainLayout->addWidget(m_logArea, 4, 0, 1, 7);
+
     QWidget *widget = new QWidget(this);
     widget->setLayout(m_mainLayout);
     setCentralWidget(widget);
@@ -142,6 +151,7 @@ void MainWindow::updateAdresses()
         m_netAddr[i]->setText(QString("%1").arg(m_ip->networkAddress() >> (24 - i * 8) & 0xFF));
         m_broadcastAddr[i]->setText(QString("%1").arg(m_ip->broadcastAddress() >> (24 - i * 8) & 0xFF));
     }
+    m_logArea->appendMessage(m_ip->message());
 }
 
 void MainWindow::makeMenus()

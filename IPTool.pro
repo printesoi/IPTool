@@ -26,3 +26,9 @@ HEADERS  += mainwindow.h\
     clickablebit.h\
     ipbyte.h\
     inputfield.h
+
+HEADERS += \
+    logarea.h
+
+SOURCES += \
+    logarea.cpp

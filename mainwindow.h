@@ -29,6 +29,7 @@ class QGridLayout;
 class IPv4;
 class IPByte;
 class InputField;
+class LogArea;
 
 class MainWindow : public QMainWindow
 {
@@ -53,6 +54,7 @@ protected:
 private:
     QGridLayout* m_mainLayout;
     IPv4* m_ip;
+    LogArea* m_logArea;
 
     QVector<IPByte*> m_bytes;
     QVector<InputField*> m_mask;

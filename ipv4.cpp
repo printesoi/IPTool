@@ -109,6 +109,21 @@ bool IPv4::isValid()
     return true;
 }
 
+bool IPv4::isBroadcastAddr()
+{
+    return m_addr == m_broadcastAddr;
+}
+
+bool IPv4::isNetworkAddr()
+{
+    return m_addr == m_netAddr;
+}
+
+bool IPv4::isAssignable()
+{
+    return !isNetworkAddr() && !isBroadcastAddr();
+}
+
 QString IPv4::formattedAdrress(uint8_t base)
 {
     QString str("");
@@ -130,6 +145,19 @@ QString IPv4::formattedAdrress(uint8_t base)
         break;
     }
 
+    return str;
+}
+
+QString IPv4::message(uint8_t base)
+{
+    QString str;
+    str = QString(formattedAdrress(base) + "/%1").arg((int)m_prefix);
+    if (isAssignable())
+        str.append(" is an assignable address.");
+    else if (isNetworkAddr())
+        str.append(" is a network address.");
+    else if (isBroadcastAddr())
+        str.append(" is a broadcast address.");
     return str;
 }
 

@@ -54,6 +54,11 @@ public:
 
     bool isValid();
     QString formattedAdrress(uint8_t base = DECIMAL);
+    QString message(uint8_t base = DECIMAL);
+
+    bool isBroadcastAddr();
+    bool isNetworkAddr();
+    bool isAssignable();
 
 private:
     uint32_t maskFromPrefix(uint8_t prefix);
