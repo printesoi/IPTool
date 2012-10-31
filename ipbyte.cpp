@@ -91,19 +91,26 @@ void IPByte::slotTextChanged(QString text)
         return;
     }
 
+    // Remove the zeroes from the beggining if any
+    int i = 0;
+    while (i < text.length() - 1 && text[i] == '0')
+        ++i;
+    QString _text = text.mid(i, -1);
+
     bool ok;
-    uint16_t value = text.toInt(&ok);
+    uint16_t value = _text.toInt(&ok);
     if (!ok)
     {
-        m_lineEdit->setText(text.left(text.length() - 1));
+        // Invalid characters where typed, remove them
+        if (_text[_text.length() - 1] == '.')
+        {
+            emit full(true);
+        }
     }
     else
     {
-        if (value > 0xFF)
-        {
-            m_lineEdit->setText(text.left(text.length() - 1));
-        }
-        else
+        // A valid numeric value
+        if (value <= 0xFF)
         {
             if (value * 10 > 255)
             {
@@ -113,6 +120,7 @@ void IPByte::slotTextChanged(QString text)
             updateBits(m_byte);
         }
     }
+    m_lineEdit->setText(QString("%1").arg(m_byte));
 }
 
 void IPByte::setByte(uint8_t byte)
