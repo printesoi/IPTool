@@ -54,9 +54,10 @@ private:
     QGridLayout* m_mainLayout;
     IPv4* m_ip;
 
-    QVector<IPByte*> bytes;
-    QVector<InputField*> netAddr;
-    QVector<InputField*> broadcastAddr;
+    QVector<IPByte*> m_bytes;
+    QVector<InputField*> m_mask;
+    QVector<InputField*> m_netAddr;
+    QVector<InputField*> m_broadcastAddr;
 
 };
 

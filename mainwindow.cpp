@@ -40,16 +40,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ipLabel->setText("IP address:");
     m_mainLayout->addWidget(ipLabel, 0, 0, 1, 1);
 
-    bytes = QVector<IPByte*>(4);
+    m_bytes = QVector<IPByte*>(4);
 
     for (int i = 0; i < 4; ++i)
     {
-        bytes[i] = new IPByte(this);
-        m_mainLayout->addWidget(bytes[i], 0, i + 1, 1, 1, Qt::AlignHCenter);
-        connect(bytes[i], SIGNAL(byteChanged(uint8_t)),
+        m_bytes[i] = new IPByte(this);
+        m_mainLayout->addWidget(m_bytes[i], 0, i + 1, 1, 1, Qt::AlignHCenter);
+        connect(m_bytes[i], SIGNAL(byteChanged(uint8_t)),
                 this, SLOT(slotAddressChanged()));
     }
-    bytes[0]->focus();
+    m_bytes[0]->focus();
 
     QLabel* maskLabel = new QLabel(this);
     maskLabel->setText("/");
@@ -66,32 +66,44 @@ MainWindow::MainWindow(QWidget *parent) :
 
     for (int i = 0; i < 3; ++i)
     {
-        connect(bytes[i],     SIGNAL(full(bool)),
-                bytes[i + 1], SLOT(slotFocus(bool)));
+        connect(m_bytes[i],     SIGNAL(full(bool)),
+                m_bytes[i + 1], SLOT(slotFocus(bool)));
     }
 
-    netAddr = QVector<InputField*>(4);
+    m_mask = QVector<InputField*>(4);
+    QLabel* extMaskLabel = new QLabel(this);
+    extMaskLabel->setText("Extended mask");
+    m_mainLayout->addWidget(extMaskLabel, 1, 0, 1, 1);
+    for (int i = 0; i < 4; ++i)
+    {
+        m_mask[i] = new InputField(this);
+        m_mask[i]->setEnabled(false);
+        m_mask[i]->setAlignment(Qt::AlignCenter);
+        m_mainLayout->addWidget(m_mask[i], 1, i + 1, 1, 1);
+    }
+
+    m_netAddr = QVector<InputField*>(4);
     QLabel* netLabel = new QLabel(this);
     netLabel->setText("Network address:");
-    m_mainLayout->addWidget(netLabel, 1, 0, 1, 1);
+    m_mainLayout->addWidget(netLabel, 2, 0, 1, 1);
     for (int i = 0; i < 4; ++i)
     {
-        netAddr[i] = new InputField(this);
-        netAddr[i]->setEnabled(false);
-        netAddr[i]->setAlignment(Qt::AlignCenter);
-        m_mainLayout->addWidget(netAddr[i], 1, i + 1, 1, 1);
+        m_netAddr[i] = new InputField(this);
+        m_netAddr[i]->setEnabled(false);
+        m_netAddr[i]->setAlignment(Qt::AlignCenter);
+        m_mainLayout->addWidget(m_netAddr[i], 2, i + 1, 1, 1);
     }
 
-    broadcastAddr = QVector<InputField*>(4);
+    m_broadcastAddr = QVector<InputField*>(4);
     QLabel* bcastAddr = new QLabel(this);
     bcastAddr->setText("Broadcast address:");
-    m_mainLayout->addWidget(bcastAddr, 2, 0, 1, 1);
+    m_mainLayout->addWidget(bcastAddr, 3, 0, 1, 1);
     for (int i = 0; i < 4; ++i)
     {
-        broadcastAddr[i] = new InputField(this);
-        broadcastAddr[i]->setEnabled(false);
-        broadcastAddr[i]->setAlignment(Qt::AlignCenter);
-        m_mainLayout->addWidget(broadcastAddr[i], 2, i + 1, 1, 1);
+        m_broadcastAddr[i] = new InputField(this);
+        m_broadcastAddr[i]->setEnabled(false);
+        m_broadcastAddr[i]->setAlignment(Qt::AlignCenter);
+        m_mainLayout->addWidget(m_broadcastAddr[i], 3, i + 1, 1, 1);
     }
 
     QWidget *widget = new QWidget(this);
@@ -117,16 +129,18 @@ void MainWindow::slotMaskChanged(int val)
 
 void MainWindow::slotAddressChanged()
 {
-    m_ip->setAddr(bytes[0]->byte() << 24 | bytes[1]->byte() << 16 | bytes[2]->byte() << 8 | bytes[3]->byte());
+    m_ip->setAddr(m_bytes[0]->byte() << 24 | m_bytes[1]->byte() << 16 | m_bytes[2]->byte() << 8 | m_bytes[3]->byte());
     updateAdresses();
 }
 
 void MainWindow::updateAdresses()
 {
+    uint32_t mask = m_ip->netMask();
     for (int i = 0; i < 4; ++i)
     {
-        netAddr[i]->setText(QString("%1").arg(m_ip->networkAddress() >> (24 - i * 8) & 0xFF));
-        broadcastAddr[i]->setText(QString("%1").arg(m_ip->broadcastAddress() >> (24 - i * 8) & 0xFF));
+        m_mask[i]->setText(QString("%1").arg(mask >> (24 - i * 8) & 0xFF));
+        m_netAddr[i]->setText(QString("%1").arg(m_ip->networkAddress() >> (24 - i * 8) & 0xFF));
+        m_broadcastAddr[i]->setText(QString("%1").arg(m_ip->broadcastAddress() >> (24 - i * 8) & 0xFF));
     }
 }
 
@@ -153,9 +167,9 @@ void MainWindow::makeMenus()
 
 void MainWindow::slotClear()
 {
-    foreach (IPByte* b, bytes)
+    foreach (IPByte* b, m_bytes)
         b->clear();
-    bytes[0]->focus();
+    m_bytes[0]->focus();
 }
 
 void MainWindow::slotHelp()
@@ -167,5 +181,5 @@ void MainWindow::slotHelp()
     box.setInformativeText(text);
     box.setMinimumWidth(350);
     box.exec();
-    bytes[0]->focus();
+    m_bytes[0]->focus();
 }
