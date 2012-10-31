@@ -19,4 +19,4 @@ Just run:
 
     You can click on the bits below the input fields to change the values.
 
-![Screenshot](http://img22.imageshack.us/img22/7807/snapshot2th.png)
+![Screenshot](http://img542.imageshack.us/img542/239/iptool.png)
